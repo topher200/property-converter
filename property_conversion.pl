@@ -20,14 +20,14 @@ find(
 
 for my $filename (@files) {
     if ($filename !~ /\.py$/) {
-            next;
-        }
-        print $filename . "\n";
+        next;
+    }
+    print $filename . "\n";
 
-        my $text = read_file($filename);
-        # print $text;
+    my $text = read_file($filename);
+    # print $text;
 
-        if ($text =~ s/
+    if ($text =~ s/
 (.*)def\s(\w+)\(\):.*\n  # outer def
     \s*def\sfget\(self\):\n  # def fget(self):
     \s*(return.*)  # entirety of fget function, until the return line
