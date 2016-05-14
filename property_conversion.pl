@@ -55,6 +55,7 @@ $1    $3
         print $function_name, "\n";
         print $function_body, "\n";
         print $property_name, "\n";
+        print $getter_docstring, "\n";
         print $text;
         last;
     }
