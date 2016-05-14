@@ -1,0 +1,12 @@
+(.*)def\s(\w+)\(\):.*\n  # outer def
+    \s*def\sfget\(self\):\n  # def fget(self):
+    \s*(return.*)  # entirety of fget function, until the return line
+    [\S\s]*?
+    \s*$2\s=\s(\w+)\(.*  # property declaration line
+    [\S\s]*?
+    ====\n  # Start of Getter
+    ([\S\s]*?)\n  # All of the Getter docstring
+    \s*\n
+    \s*Setter  # Start of Setter line
+    [\S\s]*?
+    \s*"""  # End of docstring
