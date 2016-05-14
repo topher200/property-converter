@@ -27,26 +27,12 @@ for my $filename (@files) {
     my $text = read_file($filename);
     # print $text;
 
-    if ($text =~ s/
-(.*)def\s(\w+)\(\):.*\n  # outer def
-    \s*def\sfget\(self\):\n  # def fget(self):
-    \s*(return.*)  # entirety of fget function, until the return line
-    [\S\s]*?
-    \s*$2\s=\s(\w+)\(.*  # property declaration line
-    [\S\s]*?
-    ====\n  # Start of Getter
-    ([\S\s]*?)\n  # All of the Getter docstring
-    \s*\n
-    \s*Setter  # Start of Setter line
-    [\S\s]*?
-    \s*"""  # End of docstring
-/$1\@property
-$1def $2(self):
-$1"""
-$5
-$1"""
-$1    $3
-                      /x) {
+    my $pattern_string = read_file("fget_pattern.txt");
+    my $pattern = qr/$pattern_string/x;
+    my $substitution_string = read_file("fget_substitution.txt");
+    # Must enclose substitution in double quotes to be evaluated
+    my $substitution = '"' . $substitution_string . '"';
+    if ($text =~ s/$pattern/$substitution/ee) {
         my $indent = $1;
         my $function_name = $2;
         my $function_body = $3;
