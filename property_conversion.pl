@@ -35,16 +35,14 @@ for my $filename (@files) {
 
     if ($text =~ m/($pattern)/) {
         my $matching_text = $1;
-        print $matching_text, "\n";
-        if ($matching_text =~ s/$pattern/$substitution/ee) {
-            print "\n\n\nSUCCESS\n";
-        }
-        print $matching_text, "\n";
+        print "matching text: $matching_text\n";
         print "INDENT: '$+{INDENT}'\n";
         print "PROPERTY: '$+{PROPERTY}'\n";
         print "FUNC_NAME: '$+{FUNC_NAME}'\n";
         print "FGET_FUNC: '$+{FGET_FUNC}'\n";
         print "GETTER_DOCSTRING: '\n$+{GETTER_DOCSTRING}'\n";
+        $matching_text =~ s/$pattern/$substitution/ee;
+        print "replaced text, pre docstring cleanup: $matching_text\n";
 
         # Our docstring is close to being correct, but needs to be indented one more time
         my $in_docstring = 0;
@@ -68,7 +66,7 @@ for my $filename (@files) {
 
         # Finally, replace original text with our new function
         $text =~ s/$pattern/$new_text/;
-        print $text;
+        print "new file: \n$text\n";
 
         # Only do one file for now
         last;
