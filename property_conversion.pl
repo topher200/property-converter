@@ -39,7 +39,7 @@ for my $filename (@files) {
         print "INDENT: '$+{INDENT}'\n";
         print "PROPERTY: '$+{PROPERTY}'\n";
         print "FUNC_NAME: '$+{FUNC_NAME}'\n";
-        print "FGET_FUNC: '$+{FGET_FUNC}'\n";
+        print "FGET_FUNC: '\n$+{FGET_FUNC}'\n";
         print "GETTER_DOCSTRING: '\n$+{GETTER_DOCSTRING}'\n";
 
         # Strip one indentation level off of the function body
@@ -49,7 +49,7 @@ for my $filename (@files) {
             push(@processed_lines, $line);
         }
         my $function_body = join("\n", @processed_lines);
-        print "function_body: '$function_body'\n";
+        print "function_body: '\n$function_body'\n";
 
         # Our docstring is close to being correct, but needs to be indented one
         # more time. We also remove the "Getter" and "====" lines.
@@ -69,6 +69,7 @@ for my $filename (@files) {
             push(@processed_lines, $new_line);
         }
         my $getter_docstring = join("\n", @processed_lines);
+        print "getter_docstring: '\n$getter_docstring'\n";
 
         # Finally, replace original text with our new function
         $entire_file_text =~ s/$pattern/$substitution/ee;
