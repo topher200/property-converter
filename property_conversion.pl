@@ -33,7 +33,7 @@ for my $filename (@files) {
 
     my $text = read_file($filename);
 
-    if ($text =~ m/($pattern)/) {
+    while ($text =~ m/($pattern)/g) {
         my $matching_text = $1;
         print "matching text: $matching_text\n";
         print "INDENT: '$+{INDENT}'\n";
@@ -68,8 +68,5 @@ for my $filename (@files) {
         # Finally, replace original text with our new function
         $text =~ s/$pattern/$new_text/;
         print "new file: \n$text\n";
-
-        # Only do one file for now
-        last;
     }
 }
