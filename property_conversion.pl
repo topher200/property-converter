@@ -43,7 +43,10 @@ for my $filename (@files) {
         print "FGET_FUNC: '\n$+{FGET_FUNC}'\n";
         print "GETTER_DOCSTRING: '\n$+{GETTER_DOCSTRING}'\n";
 
-        die if ($+{FGET_FUNC} =~ m/def/);
+        die if ($+{FGET_FUNC} =~ m/def\s\w+\(/);
+        die if ($+{FGET_FUNC} =~ m/locals/);
+        die if ($+{GETTER_DOCSTRING} =~ m/\"\"\"/);
+        die if ($+{GETTER_DOCSTRING} =~ m/def\s\w+\(/);
 
         # Strip one indentation level off of the function body
         my @processed_lines = ();
