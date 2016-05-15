@@ -29,22 +29,22 @@ for my $filename (@files) {
     if ($filename !~ /\.py$/) {
         next;
     }
-    print $filename . "\n";
+    print "file: " . $filename . "\n";
 
     my $text = read_file($filename);
 
-    if ($text =~ s/$pattern/$substitution/ee) {
-        my $indent = $1;
-        my $function_name = $2;
-        my $function_body = $3;
-        my $property_name = $4;
-        my $getter_docstring = $5;
-        print $indent, "\n";
-        print $function_name, "\n";
-        print $function_body, "\n";
-        print $property_name, "\n";
-        print $getter_docstring, "\n";
-        print $text;
+    if ($text =~ m/($pattern)/) {
+        my $matching_text = $1;
+        print $matching_text, "\n";
+        if ($matching_text =~ s/$pattern/$substitution/ee) {
+            print "\n\n\nSUCCESS\n";
+        }
+        print $matching_text, "\n";
+        print "INDENT: '$+{INDENT}'\n";
+        print "PROPERTY: '$+{PROPERTY}'\n";
+        print "FUNC_NAME: '$+{FUNC_NAME}'\n";
+        print "FGET_FUNC: '$+{FGET_FUNC}'\n";
+        print "GETTER_DOCSTRING: '\n$+{GETTER_DOCSTRING}'\n";
 
         # Our docstring is close to being correct, but needs to be indented one more time
         my $in_docstring = 0;

@@ -1,12 +1,13 @@
-(.*)def\s(\w+)\(\):.*\n  # outer def
+\n  # just to make sure we start on a newline
+(?<INDENT>\s*)def\s(?<FUNC_NAME>\w+)\(\):.*\n  # outer def
     \s*def\sfget\(self\):\n  # def fget(self):
-    \s*(return.*)  # entirety of fget function, until the return line
-    [\S\s]*?
-    \s*\g2\s=\s(\w+)\(.*  # property declaration line
-    [\S\s]*?
-    ====\n  # Start of Getter
-    ([\S\s]*?)\n  # All of the Getter docstring
-    \s*\n
-    \s*Setter  # Start of Setter line
-    [\S\s]*?
-    \s*"""  # End of docstring
+        \s*(?<FGET_FUNC>return.*)  # entirety of fget function, until the return line
+[\S\s]*?  # sometimes there's a random newline here
+\s*\g{FUNC_NAME}\s=\s(?<PROPERTY>\w+)\(.*  # property declaration line
+[\S\s]*?  # Start of docstring and any newlines
+====\n  # Start of Getter
+(?<GETTER_DOCSTRING>[\S\s]*?)\n  # All of the Getter docstring
+\s*\n  # newline
+\s*Setter  # Start of Setter line
+[\S\s]*? # all of the setter docstring (we don't care!)
+\s*"""  # End of docstring
