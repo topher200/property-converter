@@ -18,6 +18,13 @@ find(
     $dir
 );
 
+# Prepare pattern and substitution
+my $pattern_string = read_file("fget_pattern.txt");
+my $substitution_string = read_file("fget_substitution.txt");
+my $pattern = qr/$pattern_string/x;
+# Must enclose substitution in double quotes to be evaluated
+my $substitution = '"' . $substitution_string . '"';
+
 for my $filename (@files) {
     if ($filename !~ /\.py$/) {
         next;
@@ -25,13 +32,7 @@ for my $filename (@files) {
     print $filename . "\n";
 
     my $text = read_file($filename);
-    # print $text;
 
-    my $pattern_string = read_file("fget_pattern.txt");
-    my $pattern = qr/$pattern_string/x;
-    my $substitution_string = read_file("fget_substitution.txt");
-    # Must enclose substitution in double quotes to be evaluated
-    my $substitution = '"' . $substitution_string . '"';
     if ($text =~ s/$pattern/$substitution/ee) {
         my $indent = $1;
         my $function_name = $2;
