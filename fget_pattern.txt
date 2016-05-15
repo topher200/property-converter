@@ -9,4 +9,4 @@
 \h*\n  # newline
 \h*Setter  # Start of Setter line
 [\S\s]*? # all of the setter docstring (we don't care!)
-\h*"""  # End of docstring
+\h*"""\n  # End of docstring
