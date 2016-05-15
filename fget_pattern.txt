@@ -1,7 +1,7 @@
 (?<INDENT>\h*)def\h(?<FUNC_NAME>\w+)\(\):.*\n  # outer def
     \h*def\sfget\(self\):\n  # def fget(self):
         (?<FGET_FUNC>(?:[\S\s](?!def))*?return.*)  # entirety of fget function, until the return line
-    (?:(?!fset)[\S\s])*?  # we want to ignore any newlines (and `return locals()`), but no fset!
+    (?:(?!def)[\S\s])*?  # we want to ignore any newlines (and `return locals()`), but no new defs!
 \h*\g{FUNC_NAME}\s=\s(?<PROPERTY>\w+)\(.*  # property declaration line
 [\S\s]*?  # any newlines (or other junk)
     \h*""".*\n  # Start of docstring
