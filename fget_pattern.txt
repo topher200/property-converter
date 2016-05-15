@@ -1,13 +1,12 @@
-\n  # just to make sure we start on a newline
-(?<INDENT>\s*)def\s(?<FUNC_NAME>\w+)\(\):.*\n  # outer def
-    \s*def\sfget\(self\):\n  # def fget(self):
-        \s*(?<FGET_FUNC>return.*)  # entirety of fget function, until the return line
+(?<INDENT>\h*)def\h(?<FUNC_NAME>\w+)\(\):.*\n  # outer def
+    \h*def\sfget\(self\):\n  # def fget(self):
+        \h*(?<FGET_FUNC>return.*)  # entirety of fget function, until the return line
     (?:(?!fset)[\S\s])*?  # we want to ignore any newlines (and `return locals()`), but no fset!
-    \s*\g{FUNC_NAME}\s=\s(?<PROPERTY>\w+)\(.*  # property declaration line
+    \h*\g{FUNC_NAME}\s=\s(?<PROPERTY>\w+)\(.*  # property declaration line
 [\S\s]*?  # Start of docstring and any newlines
 ====\n  # Start of Getter
 (?<GETTER_DOCSTRING>[\S\s]*?)\n  # All of the Getter docstring
-\s*\n  # newline
-\s*Setter  # Start of Setter line
+\h*\n  # newline
+\h*Setter  # Start of Setter line
 [\S\s]*? # all of the setter docstring (we don't care!)
-\s*"""  # End of docstring
+\h*"""  # End of docstring
