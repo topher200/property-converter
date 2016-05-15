@@ -35,7 +35,7 @@ for my $filename (@files) {
 
     while ($text =~ m/($pattern)/g) {
         my $matching_text = $1;
-        print "matching text: $matching_text\n";
+        print "matching text: \n$matching_text\n";
         print "INDENT: '$+{INDENT}'\n";
         print "PROPERTY: '$+{PROPERTY}'\n";
         print "FUNC_NAME: '$+{FUNC_NAME}'\n";
