@@ -12,7 +12,7 @@ use open qw< :encoding(UTF-8) >;
 $| = 1;  # Autoflush STDOUT
 
 # find all python files
-my $dir = dir("/Users", "t.brown", "dev", "wordstream", "client", "manager");
+my $dir = dir("/Users", "t.brown", "dev", "wordstream");
 my @files;
 find(
     sub { push @files, $File::Find::name unless -d; },
