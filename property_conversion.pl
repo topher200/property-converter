@@ -49,7 +49,7 @@ for my $filename (@files) {
         # Our docstring is close to being correct, but needs to be indented one more time
         my $in_docstring = 0;
         my @processed_lines = ();
-        foreach my $line (split(/\n/, $text)) {
+        foreach my $line (split(/\n/, $matching_text)) {
             if ($line =~ m/"""/) {
                 if ($in_docstring == 0) {
                     $in_docstring = 1;
@@ -64,8 +64,13 @@ for my $filename (@files) {
             }
             push(@processed_lines, $new_line);
         }
-        print join("\n", @processed_lines);
+        my $new_text = join("\n", @processed_lines);
 
+        # Finally, replace original text with our new function
+        $text =~ s/$pattern/$new_text/;
+        print $text;
+
+        # Only do one file for now
         last;
     }
 }
