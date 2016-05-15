@@ -1,4 +1,5 @@
 (?<INDENT>\h*)def\h(?<FUNC_NAME>\w+)\(\):.*\n  # outer def
+    \n+  # accept a random newline here
     \h*def\sfget\(self\):\n  # def fget(self):
         (?<FGET_FUNC>(?:[\S\s](?!def))*?(?:return|raise).*)  # entirety of fget function, until the return line
     \n+  # accept a random newline here
