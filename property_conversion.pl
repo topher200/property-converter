@@ -45,6 +45,27 @@ for my $filename (@files) {
         print $property_name, "\n";
         print $getter_docstring, "\n";
         print $text;
+
+        # Our docstring is close to being correct, but needs to be indented one more time
+        my $in_docstring = 0;
+        my @processed_lines = ();
+        foreach my $line (split(/\n/, $text)) {
+            if ($line =~ m/"""/) {
+                if ($in_docstring == 0) {
+                    $in_docstring = 1;
+                } else {
+                    $in_docstring = 0;
+                }
+            }
+            # We indent any line that is the start/end of docstring or in a docstring
+            my $new_line = $line;
+            if (($line =~ m/"""/) || ($in_docstring == 1)) {
+                $new_line = "    " . $line;
+            }
+            push(@processed_lines, $new_line);
+        }
+        print join("\n", @processed_lines);
+
         last;
     }
 }
