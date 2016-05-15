@@ -1,7 +1,6 @@
-
 $+{INDENT}\@$+{PROPERTY}
 $+{INDENT}def $+{FUNC_NAME}(self):
 $+{INDENT}    \"\"\"
-$+{GETTER_DOCSTRING}
+$getter_docstring
 $+{INDENT}    \"\"\"
 $function_body

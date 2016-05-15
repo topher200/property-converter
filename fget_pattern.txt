@@ -3,8 +3,8 @@
         (?<FGET_FUNC>[\S\s]*?return.*)  # entirety of fget function, until the return line
     (?:(?!fset)[\S\s])*?  # we want to ignore any newlines (and `return locals()`), but no fset!
     \h*\g{FUNC_NAME}\s=\s(?<PROPERTY>\w+)\(.*  # property declaration line
-[\S\s]*?  # Start of docstring and any newlines
-====\n  # Start of Getter
+[\S\s]*?  # any newlines (or other junk)
+\h*""".*\n  # Start of docstring
 (?<GETTER_DOCSTRING>[\S\s]*?)\n  # All of the Getter docstring
 \h*\n  # newline
 \h*Setter  # Start of Setter line

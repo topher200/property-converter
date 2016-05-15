@@ -31,9 +31,9 @@ for my $filename (@files) {
     }
     print "file: " . $filename . "\n";
 
-    my $text = read_file($filename);
+    my $entire_file_text = read_file($filename);
 
-    while ($text =~ m/($pattern)/g) {
+    while ($entire_file_text =~ m/($pattern)/g) {
         my $matching_text = $1;
         print "matching text: \n$matching_text\n";
         print "INDENT: '$+{INDENT}'\n";
@@ -51,35 +51,29 @@ for my $filename (@files) {
         my $function_body = join("\n", @processed_lines);
         print "function_body: '$function_body'\n";
 
-        # Run replacement
-        $matching_text =~ s/$pattern/$substitution/ee;
-        print "replaced text, pre docstring cleanup: $matching_text\n";
-
-        # Our docstring is close to being correct, but needs to be indented one more time
-        my $in_docstring = 0;
+        # Our docstring is close to being correct, but needs to be indented one
+        # more time. We also remove the "Getter" and "====" lines.
         @processed_lines = ();
-        foreach my $line (split(/\n/, $matching_text)) {
-            my $new_line = $line;
-            if ($line =~ m/"""/) {
-                if ($in_docstring == 0) {
-                    $in_docstring = 1;
-                } else {
-                    $in_docstring = 0;
-                }
-            } else {
-                # We indent any line that is in a docstring and has any non-whitespace
-                if (($in_docstring == 1) && ($line =~ m/\S/)) {
-                    $new_line = "    " . $line;
-                }
+        foreach my $line (split(/\n/, $+{GETTER_DOCSTRING})) {
+            # Remove Getter and '=====' lines
+            if (($line =~ m/====/) || ($line =~ m/Getter/)) {
+                next;
             }
+
+            # don't indent lines that are whitespace only
+            my $new_line = $line;
+            if ($line =~ m/\S/) {
+                $new_line = "    " . $line;
+            }
+
             push(@processed_lines, $new_line);
         }
-        my $new_text = join("\n", @processed_lines);
+        my $getter_docstring = join("\n", @processed_lines);
 
         # Finally, replace original text with our new function
-        $text =~ s/$pattern/$new_text/;
-        print "new file: \n$text\n";
+        $entire_file_text =~ s/$pattern/$substitution/ee;
+        print "new file: \n$entire_file_text\n";
     }
 
-    write_file($filename, $text);
+    write_file($filename, $entire_file_text);
 }
