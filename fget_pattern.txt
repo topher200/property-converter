@@ -2,8 +2,8 @@
 (?<INDENT>\s*)def\s(?<FUNC_NAME>\w+)\(\):.*\n  # outer def
     \s*def\sfget\(self\):\n  # def fget(self):
         \s*(?<FGET_FUNC>return.*)  # entirety of fget function, until the return line
-[\S\s]*?  # sometimes there's a random newline here
-\s*\g{FUNC_NAME}\s=\s(?<PROPERTY>\w+)\(.*  # property declaration line
+    (?:(?!fset)[\S\s])*?  # we want to ignore any newlines (and `return locals()`), but no fset!
+    \s*\g{FUNC_NAME}\s=\s(?<PROPERTY>\w+)\(.*  # property declaration line
 [\S\s]*?  # Start of docstring and any newlines
 ====\n  # Start of Getter
 (?<GETTER_DOCSTRING>[\S\s]*?)\n  # All of the Getter docstring
