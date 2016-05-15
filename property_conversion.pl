@@ -41,12 +41,23 @@ for my $filename (@files) {
         print "FUNC_NAME: '$+{FUNC_NAME}'\n";
         print "FGET_FUNC: '$+{FGET_FUNC}'\n";
         print "GETTER_DOCSTRING: '\n$+{GETTER_DOCSTRING}'\n";
+
+        # Strip one indentation level off of the function body
+        my @processed_lines = ();
+        foreach my $line (split(/\n/, $+{FGET_FUNC})) {
+            $line =~ s/\h{4}//;
+            push(@processed_lines, $line);
+        }
+        my $function_body = join("\n", @processed_lines);
+        print "function_body: '$function_body'\n";
+
+        # Run replacement
         $matching_text =~ s/$pattern/$substitution/ee;
         print "replaced text, pre docstring cleanup: $matching_text\n";
 
         # Our docstring is close to being correct, but needs to be indented one more time
         my $in_docstring = 0;
-        my @processed_lines = ();
+        @processed_lines = ();
         foreach my $line (split(/\n/, $matching_text)) {
             my $new_line = $line;
             if ($line =~ m/"""/) {

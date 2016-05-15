@@ -4,4 +4,4 @@ $+{INDENT}def $+{FUNC_NAME}(self):
 $+{INDENT}    \"\"\"
 $+{GETTER_DOCSTRING}
 $+{INDENT}    \"\"\"
-$+{INDENT}    $+{FGET_FUNC}
+$function_body
