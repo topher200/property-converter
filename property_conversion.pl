@@ -69,4 +69,6 @@ for my $filename (@files) {
         $text =~ s/$pattern/$new_text/;
         print "new file: \n$text\n";
     }
+
+    write_file($filename, $text);
 }
