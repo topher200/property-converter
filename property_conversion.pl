@@ -56,8 +56,8 @@ for my $filename (@files) {
                     $in_docstring = 0;
                 }
             } else {
-                # We indent any line that is in a docstring
-                if ($in_docstring == 1) {
+                # We indent any line that is in a docstring and has any non-whitespace
+                if (($in_docstring == 1) && ($line =~ m/\S/)) {
                     $new_line = "    " . $line;
                 }
             }
