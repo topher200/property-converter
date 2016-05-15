@@ -26,6 +26,9 @@ my $pattern = qr/$pattern_string/x;
 # Must enclose substitution in double quotes to be evaluated
 my $substitution = '"' . $substitution_string . '"';
 
+my $total_fgets = 0;
+my $total_replacements = 0;
+
 for my $filename (@files) {
     if ($filename !~ /\.py$/) {
         next;
@@ -34,7 +37,11 @@ for my $filename (@files) {
 
     my $entire_file_text = read_file($filename);
 
+    my $num_matches = () = $entire_file_text =~ m/def\sfget/g;
+    $total_fgets += $num_matches;
+
     while ($entire_file_text =~ m/($pattern)/g) {
+        $total_replacements += 1;
         my $matching_text = $1;
         print "matching text: \n$matching_text\n";
         # print "INDENT: '$+{INDENT}'\n";
@@ -84,3 +91,6 @@ for my $filename (@files) {
 
     write_file($filename, $entire_file_text);
 }
+
+print "total_fgets: '$total_fgets'\n";
+print "total_replacements: '$total_replacements'\n";
