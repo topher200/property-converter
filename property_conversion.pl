@@ -9,6 +9,8 @@ use Path::Class;
 
 use open qw< :encoding(UTF-8) >;
 
+$| = 1;  # Autoflush STDOUT
+
 # find all python files
 my $dir = dir("/Users", "t.brown", "dev", "wordstream", "client", "manager", "src", "m1",
               "handlers", "api", "wordstream");
