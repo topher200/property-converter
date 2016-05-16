@@ -6,7 +6,7 @@
     \h*def\sfset\(self,\h(?<FSET_PARAM>\w+)\):\n  # def fset(self, <fset_param>):
         (?<FSET_FUNC>(?:[\S\s](?!def))*?self\.__\g{FUNC_NAME}.*)  # entirety of fset function, until the set
     \n+  # accept a random newline here
-    \h*return\slocals.*  # return locals()
+    \h*return\s(?:locals|{).*  # `return locals()` or `return {'fget`
     \n+  # accept a random newline here
 \h*\g{FUNC_NAME}\s=\s(?<PROPERTY>\w+)\(.*  # property declaration line
 \n+  # accept a random newline here

@@ -3,7 +3,7 @@
     \h*def\sfget\(self\):\n  # def fget(self):
         (?<FGET_FUNC>(?:[\S\s](?!def))*?(?:return|raise).*)  # entirety of fget function, until the return line
     \n+  # accept a random newline here
-    \h*return\slocals.*  # return locals()
+    \h*return\s(?:locals|{).*  # `return locals()` or `return {'fget`
     \n+  # accept a random newline here
 \h*\g{FUNC_NAME}\s=\s(?<PROPERTY>\w+)\(.*  # property declaration line
 \n+  # accept a random newline here
