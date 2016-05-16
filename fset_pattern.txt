@@ -1,0 +1,17 @@
+(?<INDENT>\h*)def\h(?<FUNC_NAME>\w+)\(\):.*  # outer def
+    \n+  # accept a random newline here
+    \h*def\sfget\(self\):\n  # def fget(self):
+        (?<FGET_FUNC>(?:[\S\s](?!def))*?(?:return|raise).*)  # entirety of fget function, until the return line
+    \n+  # accept a random newline here
+    \h*def\sfset\(self,\h(?<FSET_PARAM>\w+)\):\n  # def fset(self, <fset_param>):
+        (?<FSET_FUNC>(?:[\S\s](?!def))*?self\.__\g{FUNC_NAME}.*)  # entirety of fset function, until the set
+    \n+  # accept a random newline here
+    \h*return\slocals.*  # return locals()
+    \n+  # accept a random newline here
+\h*\g{FUNC_NAME}\s=\s(?<PROPERTY>\w+)\(.*  # property declaration line
+\n+  # accept a random newline here
+\h*""".*\n  # Start of docstring
+    (?<GETTER_DOCSTRING>(?:[\S\s](?!"""))*?)\n  # All of the Getter docstring
+    \h*(?:Setter)+  # Stop if we get to the Setter docstring
+    (?:[\S\s](?!"""))*? # toss the rest of the docstring
+\h*"""\n  # End of docstring
