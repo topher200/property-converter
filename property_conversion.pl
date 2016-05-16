@@ -6,7 +6,6 @@ use warnings;
 use File::Find;
 use File::Slurp;
 use Path::Class;
-use Text::Wrap;
 
 use open qw< :encoding(UTF-8) >;
 
@@ -73,9 +72,9 @@ for my $filename (@files) {
 
         # Our docstring is close to being correct, but needs to be indented one
         # more time. We also remove the "Getter" "Setter" and "====" lines.
-        my $getter_docstring = cleanup_docstring($+{GETTER_DOCSTRING}, $+{INDENT});
+        my $getter_docstring = cleanup_docstring($+{GETTER_DOCSTRING});
         print "getter_docstring: '\n$getter_docstring'\n";
-        my $setter_docstring = cleanup_docstring($+{SETTER_DOCSTRING}, $+{INDENT});
+        my $setter_docstring = cleanup_docstring($+{SETTER_DOCSTRING});
         print "setter_docstring: '\n$setter_docstring'\n";
 
         # Finally, replace original text with our new function
@@ -113,7 +112,7 @@ sub strip_one_indentation {
 # Our docstring is close to being correct, but needs to be indented one
 # more time. We also remove the "Getter" "Setter" and "====" lines.
 sub cleanup_docstring {
-    my ($docstring, $top_level_indent) = @_;
+    my ($docstring) = @_;
 
     my @processed_lines = ();
     foreach my $line (split(/\n/, $docstring)) {
@@ -121,17 +120,15 @@ sub cleanup_docstring {
         if (($line =~ m/====/) || ($line =~ m/Getter/)) {
             next;
         }
-        push(@processed_lines, $line);
+
+        # don't indent lines that are whitespace only
+        my $new_line = $line;
+        if ($line =~ m/\S/) {
+            $new_line = "    " . $line;
+        }
+
+        push(@processed_lines, $new_line);
     }
 
-    # We indent in 8 more spaces than the top level
-    my $our_indent = $top_level_indent . '        ';
-    print "indent: '$our_indent'";
-    my $cleaned_docstring = join("\n", @processed_lines);
-    local $Text::Wrap::unexpand = 0;
-    my $reflowed_docstring = wrap('    ', '', $cleaned_docstring);
-    if ($cleaned_docstring ne $reflowed_docstring) {
-        print "reflowed docstring! orig: '\n$cleaned_docstring'\n";
-    }
-    return $reflowed_docstring;
+    return join("\n", @processed_lines);
 }
