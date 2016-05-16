@@ -35,6 +35,9 @@ my $pattern = qr/$pattern_string/x;
 # Must enclose substitution in double quotes to be evaluated
 my $substitution = '"' . $substitution_string . '"';
 
+print "pattern: \n$pattern\n";
+print "substitution: \n$substitution\n";
+
 my $total_matches = 0;
 my $total_replacements = 0;
 
