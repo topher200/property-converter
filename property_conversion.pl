@@ -62,6 +62,7 @@ for my $filename (@files) {
         print "FGET_FUNC: '\n$+{FGET_FUNC}'\n";
         print "GETTER_DOCSTRING: '\n$+{GETTER_DOCSTRING}'\n";
         if ($work_on_string eq 'fset') {
+            print "FSET_PARAM: '$+{FSET_PARAM}'\n";
             print "FSET_FUNC: '\n$+{FSET_FUNC}'\n";
             print "SETTER_DOCSTRING: '\n$+{SETTER_DOCSTRING}'\n";
         }
