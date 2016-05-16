@@ -3,4 +3,4 @@ $+{INDENT}def $+{FUNC_NAME}(self):
 $+{INDENT}    \"\"\"
 $getter_docstring
 $+{INDENT}    \"\"\"
-$function_body
+$fget_function_body

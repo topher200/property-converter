@@ -57,41 +57,25 @@ for my $filename (@files) {
         print "PROPERTY: '$+{PROPERTY}'\n";
         print "FUNC_NAME: '$+{FUNC_NAME}'\n";
         print "FGET_FUNC: '\n$+{FGET_FUNC}'\n";
+        print "FSET_FUNC: '\n$+{FSET_FUNC}'\n";
         print "GETTER_DOCSTRING: '\n$+{GETTER_DOCSTRING}'\n";
+        print "SETTER_DOCSTRING: '\n$+{SETTER_DOCSTRING}'\n";
 
-        die if ($+{FGET_FUNC} =~ m/def\s\w+\(/);
-        die if ($+{FGET_FUNC} =~ m/locals/);
-        die if ($+{GETTER_DOCSTRING} =~ m/\"\"\"/);
-        die if ($+{GETTER_DOCSTRING} =~ m/def\s\w+\(/);
+        do_checks($+{FGET_FUNC}, $+{GETTER_DOCSTRING});
+        do_checks($+{FSET_FUNC}, $+{SETTER_DOCSTRING});
 
-        # Strip one indentation level off of the function body
-        my @processed_lines = ();
-        foreach my $line (split(/\n/, $+{FGET_FUNC})) {
-            $line =~ s/\h{4}//;
-            push(@processed_lines, $line);
-        }
-        my $function_body = join("\n", @processed_lines);
-        print "function_body: '\n$function_body'\n";
+        # Strip one indentation level off of the function bodies
+        my $fget_function_body = strip_one_indentation($+{FGET_FUNC});
+        print "fget function_body: '\n$fget_function_body'\n";
+        my $fset_function_body = strip_one_indentation($+{FSET_FUNC});
+        print "fset function_body: '\n$fset_function_body'\n";
 
         # Our docstring is close to being correct, but needs to be indented one
-        # more time. We also remove the "Getter" and "====" lines.
-        @processed_lines = ();
-        foreach my $line (split(/\n/, $+{GETTER_DOCSTRING})) {
-            # Remove Getter and '=====' lines
-            if (($line =~ m/====/) || ($line =~ m/Getter/)) {
-                next;
-            }
-
-            # don't indent lines that are whitespace only
-            my $new_line = $line;
-            if ($line =~ m/\S/) {
-                $new_line = "    " . $line;
-            }
-
-            push(@processed_lines, $new_line);
-        }
-        my $getter_docstring = join("\n", @processed_lines);
+        # more time. We also remove the "Getter" "Setter" and "====" lines.
+        my $getter_docstring = cleanup_docstring($+{GETTER_DOCSTRING});
         print "getter_docstring: '\n$getter_docstring'\n";
+        my $setter_docstring = cleanup_docstring($+{SETTER_DOCSTRING});
+        print "setter_docstring: '\n$setter_docstring'\n";
 
         # Finally, replace original text with our new function
         $entire_file_text =~ s/$pattern/$substitution/ee;
@@ -103,3 +87,48 @@ for my $filename (@files) {
 
 print "total_matches: '$total_matches'\n";
 print "total_replacements: '$total_replacements'\n";
+
+sub do_checks {
+    my ($func, $docstring) = @_;
+
+    die if ($func =~ m/def\s\w+\(/);
+    die if ($func =~ m/locals/);
+    die if ($docstring =~ m/\"\"\"/);
+    die if ($docstring =~ m/def\s\w+\(/);
+}
+
+sub strip_one_indentation {
+    my ($func) = @_;
+
+    my @processed_lines = ();
+    foreach my $line (split(/\n/, $func)) {
+        $line =~ s/\h{4}//;
+        push(@processed_lines, $line);
+    }
+
+    return join("\n", @processed_lines);
+}
+
+# Our docstring is close to being correct, but needs to be indented one
+# more time. We also remove the "Getter" "Setter" and "====" lines.
+sub cleanup_docstring {
+    my ($docstring) = @_;
+
+    my @processed_lines = ();
+    foreach my $line (split(/\n/, $docstring)) {
+        # Remove Getter and '=====' lines
+        if (($line =~ m/====/) || ($line =~ m/Getter/)) {
+            next;
+        }
+
+        # don't indent lines that are whitespace only
+        my $new_line = $line;
+        if ($line =~ m/\S/) {
+            $new_line = "    " . $line;
+        }
+
+        push(@processed_lines, $new_line);
+    }
+
+    return join("\n", @processed_lines);
+}

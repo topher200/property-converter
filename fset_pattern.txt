@@ -12,6 +12,6 @@
 \n+  # accept a random newline here
 \h*""".*\n  # Start of docstring
     (?<GETTER_DOCSTRING>(?:[\S\s](?!"""))*?)\n  # All of the Getter docstring
-    \h*(?:Setter)+  # Stop if we get to the Setter docstring
-    (?:[\S\s](?!"""))*? # toss the rest of the docstring
+    \h*Setter.*\n
+    (?<SETTER_DOCSTRING>(?:[\S\s](?!"""))*?)\n  # All of the Setter docstring
 \h*"""\n  # End of docstring
