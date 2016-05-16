@@ -19,14 +19,23 @@ find(
     $dir
 );
 
+# Modify $work_on_string to change what we're working on
+my $work_on_string = "fget";
+
+# Set up filenames to read from
+my $pattern_filename = "fget_pattern.txt";
+$pattern_filename =~ s/fget/$work_on_string/;
+my $substitution_filename = "fget_substitution.txt";
+$substitution_filename =~ s/fget/$work_on_string/;
+
 # Prepare pattern and substitution
-my $pattern_string = read_file("fget_pattern.txt");
-my $substitution_string = read_file("fget_substitution.txt");
+my $pattern_string = read_file($pattern_filename);
+my $substitution_string = read_file($substitution_filename);
 my $pattern = qr/$pattern_string/x;
 # Must enclose substitution in double quotes to be evaluated
 my $substitution = '"' . $substitution_string . '"';
 
-my $total_fgets = 0;
+my $total_matches = 0;
 my $total_replacements = 0;
 
 for my $filename (@files) {
@@ -37,8 +46,8 @@ for my $filename (@files) {
 
     my $entire_file_text = read_file($filename);
 
-    my $num_matches = () = $entire_file_text =~ m/def\sfget/g;
-    $total_fgets += $num_matches;
+    my $num_matches = () = $entire_file_text =~ m/def\sfset/g;
+    $total_matches += $num_matches;
 
     while ($entire_file_text =~ m/($pattern)/g) {
         $total_replacements += 1;
@@ -92,5 +101,5 @@ for my $filename (@files) {
     write_file($filename, $entire_file_text);
 }
 
-print "total_fgets: '$total_fgets'\n";
+print "total_matches: '$total_matches'\n";
 print "total_replacements: '$total_replacements'\n";
