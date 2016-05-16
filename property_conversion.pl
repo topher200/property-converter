@@ -49,7 +49,7 @@ for my $filename (@files) {
 
     my $entire_file_text = read_file($filename);
 
-    my $num_matches = () = $entire_file_text =~ m/def\sfset/g;
+    my $num_matches = () = $entire_file_text =~ m/def\s$work_on_string/g;
     $total_matches += $num_matches;
 
     while ($entire_file_text =~ m/($pattern)/g) {
