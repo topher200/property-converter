@@ -60,25 +60,35 @@ for my $filename (@files) {
         print "PROPERTY: '$+{PROPERTY}'\n";
         print "FUNC_NAME: '$+{FUNC_NAME}'\n";
         print "FGET_FUNC: '\n$+{FGET_FUNC}'\n";
-        print "FSET_FUNC: '\n$+{FSET_FUNC}'\n";
         print "GETTER_DOCSTRING: '\n$+{GETTER_DOCSTRING}'\n";
-        print "SETTER_DOCSTRING: '\n$+{SETTER_DOCSTRING}'\n";
+        if ($work_on_string eq 'fset') {
+            print "FSET_FUNC: '\n$+{FSET_FUNC}'\n";
+            print "SETTER_DOCSTRING: '\n$+{SETTER_DOCSTRING}'\n";
+        }
 
         do_checks($+{FGET_FUNC}, $+{GETTER_DOCSTRING});
-        do_checks($+{FSET_FUNC}, $+{SETTER_DOCSTRING});
+        if ($work_on_string eq 'fset') {
+            do_checks($+{FSET_FUNC}, $+{SETTER_DOCSTRING});
+        }
 
         # Strip one indentation level off of the function bodies
         my $fget_function_body = strip_one_indentation($+{FGET_FUNC});
         print "fget function_body: '\n$fget_function_body'\n";
-        my $fset_function_body = strip_one_indentation($+{FSET_FUNC});
-        print "fset function_body: '\n$fset_function_body'\n";
+        my $fset_function_body = undef;
+        if ($work_on_string eq 'fset') {
+            $fset_function_body = strip_one_indentation($+{FSET_FUNC});
+            print "fset function_body: '\n$fset_function_body'\n";
+        }
 
         # Our docstring is close to being correct, but needs to be indented one
         # more time. We also remove the "Getter" "Setter" and "====" lines.
         my $getter_docstring = cleanup_docstring($+{GETTER_DOCSTRING});
         print "getter_docstring: '\n$getter_docstring'\n";
-        my $setter_docstring = cleanup_docstring($+{SETTER_DOCSTRING});
-        print "setter_docstring: '\n$setter_docstring'\n";
+        my $setter_docstring = undef;
+        if ($work_on_string eq 'fset') {
+            $setter_docstring = cleanup_docstring($+{SETTER_DOCSTRING});
+            print "setter_docstring: '\n$setter_docstring'\n";
+        }
 
         # Finally, replace original text with our new function
         $entire_file_text =~ s/$pattern/$substitution/ee;
