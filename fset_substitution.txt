@@ -1,0 +1,13 @@
+$+{INDENT}\@$+{PROPERTY}
+$+{INDENT}def $+{FUNC_NAME}(self):
+$+{INDENT}    \"\"\"
+$getter_docstring
+$+{INDENT}    \"\"\"
+$fget_function_body
+
+$+{INDENT}\@$+{FUNC_NAME}.setter
+$+{INDENT}def $+{FUNC_NAME}(self, $+{FSET_PARAM}):
+$+{INDENT}    \"\"\"
+$setter_docstring
+$+{INDENT}    \"\"\"
+$fset_function_body
