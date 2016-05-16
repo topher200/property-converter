@@ -3,6 +3,8 @@ use autodie;
 use strict;
 use warnings;
 
+# use re 'debug';
+
 use File::Find;
 use File::Slurp;
 use Path::Class;
