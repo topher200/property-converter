@@ -69,9 +69,9 @@ for my $filename (@files) {
             print "SETTER_DOCSTRING: '\n$+{SETTER_DOCSTRING}'\n";
         }
 
-        do_checks($+{FGET_FUNC}, $+{GETTER_DOCSTRING});
+        do_checks($+{FGET_FUNC}, $+{GETTER_DOCSTRING}, $+{INDENT});
         if ($work_on_string eq 'fset') {
-            do_checks($+{FSET_FUNC}, $+{SETTER_DOCSTRING});
+            do_checks($+{FSET_FUNC}, $+{SETTER_DOCSTRING}, $+{INDENT});
         }
 
         # Strip one indentation level off of the function bodies
@@ -105,11 +105,18 @@ print "total_matches: '$total_matches'\n";
 print "total_replacements: '$total_replacements'\n";
 
 sub do_checks {
-    my ($func, $docstring) = @_;
+    my ($func, $docstring, $indentation) = @_;
 
+    # no extra defs in our function body
     die if ($func =~ m/def\s\w+\(/);
+    # we've ended our function body before `return locals`
     die if ($func =~ m/locals/);
+    # the function body is indented as expected (outer indentation plus 8
+    # spaces)
+    die if ($func !~ m/^$indentation\h{8}\S/);
+    # the docstring isn't closed early
     die if ($docstring =~ m/\"\"\"/);
+    # there's no function declarations in the docstring
     die if ($docstring =~ m/def\s\w+\(/);
 }
 
