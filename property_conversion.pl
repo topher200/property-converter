@@ -21,8 +21,8 @@ find(
     $dir
 );
 
-# Modify $work_on_string to change what we're working on
-my $work_on_string = "fset";
+# Modify $work_on_string to change what we're working on. Options: 'fget' and 'fset'
+my $work_on_string = "fget";
 
 # Set up filenames to read from
 my $pattern_filename = "fget_pattern.txt";
